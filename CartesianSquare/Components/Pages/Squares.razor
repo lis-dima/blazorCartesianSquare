@@ -1,0 +1,33 @@
+﻿@page "/squares"
+@attribute [Authorize]
+
+@using CartesianSquare.Components.Components
+@using CartesianSquare.Components.Components.Square
+
+@implements IDisposable
+
+
+@inject ISquareService squareService
+
+
+<div class="all-squares-wrap col-6">
+    <AllSquares></AllSquares>
+    <CreateSquare></CreateSquare>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        squareService.OnNewSquareCreated += Handler_OnNewSquareCreated;
+    }
+
+    void Handler_OnNewSquareCreated(Square newSquare)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        squareService.OnNewSquareCreated -= Handler_OnNewSquareCreated;
+    }
+}

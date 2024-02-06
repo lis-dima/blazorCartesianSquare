@@ -1,0 +1,108 @@
+﻿@rendermode InteractiveServer
+
+@implements IDisposable
+@inject ISquareService squareService
+
+<EditForm Model="Model" FormName="CreateEditRecord" class="row g-3 d-flex col-7" style="margin: auto;" OnSubmit="FormHandler" data-enhance>
+    <div>
+        <label for="record-title" class="visually-hidden">List item</label>
+        <InputText type="text" class="form-control" placeholder="What is going to happen?" id="record-title" @bind-Value="Model.Title" />
+    </div>
+    <div class="d-flex justify-content-between second-row">
+        <div class="dropdown col-8">
+            <button class="dropbtn">@squareService.SquareTypes[Model.ParentBlock]</button>
+            <div class="dropdown-content">
+                @for (var i = 0; i < squareService.SquareTypes.Length; i++)
+                {
+                    var tmp = i;
+                    <a @onclick="()=>SetParentBlock(tmp)">@squareService.SquareTypes[i]</a>
+                }
+            </div>
+        </div>
+        <div class="d-flex ">
+            <div class="col-auto col-1 d-flex value-wrap">
+                <label for="record-value">Value</label>
+                <InputNumber type="number" class="form-control" style="min-width:50px;" id="record-value" @bind-Value="Model.Value" />
+            </div>
+            <div class="d-flex flex-row">
+                <div class="col-auto mx-2">
+                    <button type="submit" class="btn btn-primary mb-3">
+                        @{
+                            var btnText = squareService.IsRecordOnEdit()
+                            ? "Update"
+                            : "Create";
+                        }
+                        @btnText
+                    </button>
+                </div>
+                @if (squareService.IsRecordOnEdit())
+                {
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-outline-danger mb-3" onclick="CancelEditRecord">Сancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public Square Square { get; set; }
+    public Record Model { get; set; } = new();
+
+    protected override Task OnInitializedAsync()
+    {
+        squareService.OnSetRecordOnEdit += handler_OnSetRecordOnEdit;
+        squareService.OnCencelRecordOnEdit += handler_OnCencelRecordOnEdit;
+        return base.OnInitializedAsync();
+    }
+
+    void handler_OnSetRecordOnEdit(Record record)
+    {
+        Model = record;
+        StateHasChanged();
+    }
+
+    void handler_OnCencelRecordOnEdit()
+    {
+        Model = new();
+        StateHasChanged();
+    }
+
+    public async Task FormHandler()
+    {
+        Model.SquareId = Square.Id;
+        if (squareService.IsRecordOnEdit())
+        {
+            var res = await squareService.UpdateRecordAsync(Model);
+            Model = new();
+            StateHasChanged();
+        }
+        else
+        {
+            var res = await squareService.CreateRecordAsync(Model);
+            if (res.Id != 0)
+            {
+                Model = new();
+                StateHasChanged();
+            }
+        }
+    }
+
+    public void CancelEditRecord()
+    {
+        squareService.CencelRecordOnEdit();
+    }
+
+    public void SetParentBlock(int newParentBlock)
+    {
+        Model.ParentBlock = newParentBlock;
+    }
+
+    public void Dispose()
+    {
+        squareService.OnSetRecordOnEdit -= handler_OnSetRecordOnEdit;
+        squareService.OnCencelRecordOnEdit -= handler_OnCencelRecordOnEdit;    }
+}

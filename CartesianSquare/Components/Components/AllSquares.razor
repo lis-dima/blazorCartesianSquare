@@ -1,0 +1,29 @@
+﻿@inject ISquareService squereService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+
+<div style="max-height: 50vh;overflow-x: auto;width:100%;margin:auto;">
+    <div>
+        <ul>
+            @foreach (var square in Squares)
+            {
+                <NavLink class="nav-link" href="@($"/square/{square.Id}")">@square.Title</NavLink>
+            }
+        </ul>
+    </div>
+</div>
+
+@code {
+    List<CartesianSquare.Shared.Squares.Square> Squares { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            Squares = await squereService.GetAllSquaresAsync(userId);
+        }
+    }
+}

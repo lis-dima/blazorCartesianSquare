@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+<main class="main-wrap">
+    <div class="main-nav-menu">
+        <NavMenu /> 
+    </div>
+    <div class="opposit-main-nav-menu">
+         <SectionOutlet SectionId="TopbarSection" /> 
+    </div>
+    <div class="main-body">
+        @Body 
+    </div>
+</main>
+
+@code {
+    internal static object TopbarSection = new();
+}

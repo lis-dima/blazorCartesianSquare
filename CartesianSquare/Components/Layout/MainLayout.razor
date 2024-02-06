@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main class="flex-column d-flex vh-100">
+        @Body
+        <div class="d-none">
+
+            <div class="sticky-top d-flex">
+                <div class=" d-flex layout-small-part">
+                    <CartesianSquare.Components.Components.NavigationArea></CartesianSquare.Components.Components.NavigationArea>
+                </div>
+                <div class="d-flex" style="">
+                    <CartesianSquare.Components.Components.FormWrap></CartesianSquare.Components.Components.FormWrap>
+                </div>
+            </div>
+            <CartesianSquare.Components.Components.AllSquares></CartesianSquare.Components.Components.AllSquares>
+            <div class="d-none">
+                <CartesianSquare.Components.Components.FourSquares></CartesianSquare.Components.Components.FourSquares>
+            </div>
+
+
+        </div>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

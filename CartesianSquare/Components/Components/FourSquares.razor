@@ -1,0 +1,80 @@
+﻿@using Shared.Records
+@using Shared.Squares
+
+@inject ISquareService squareService
+
+<div class="grid-container">
+    <div class="square square-0">
+        <div class="d-flex extra-data">
+            <div class="square-name">@squareService.SquareTypes[0]</div>
+            <div class="square-total-value">@GetBlockTotalValue(0)</div>
+        </div>
+        <div>
+            @foreach (var s in GetRecords4Square(0))
+            {
+                <RecordPreview Record="s"></RecordPreview>
+            }
+        </div>
+    </div>
+    <div class="square square-1">
+        <div class="d-flex extra-data">
+            <div class="square-name">@squareService.SquareTypes[1]</div>
+            <div class="square-total-value">@GetBlockTotalValue(1)</div>
+        </div>
+        <div class="flex-row-reverse">
+            @{
+                var square1Classes = new List<string> { "flex-row-reverse" };
+            }
+            @foreach (var s in GetRecords4Square(1))
+            {
+                <RecordPreview Record="s" CssClasses="square1Classes"></RecordPreview>
+            }
+        </div>
+    </div>
+    <div class="square square-2">
+        <div class="d-flex extra-data">
+            <div class="square-name">@squareService.SquareTypes[2]</div>
+            <div class="square-total-value">@GetBlockTotalValue(2)</div>
+        </div>
+        <div>
+            @foreach (var s in GetRecords4Square(2))
+            {
+                <RecordPreview Record="s"></RecordPreview>
+            }
+        </div>
+    </div>
+    <div class="square square-3">
+        <div class="d-flex extra-data">
+            <div class="square-name">@squareService.SquareTypes[3]</div>
+            <div class="square-total-value">@GetBlockTotalValue(3)</div>
+        </div>
+        <div>
+            @{
+                var square3Classes = new List<string> { "flex-row-reverse" };
+            }
+            @foreach (var s in GetRecords4Square(3))
+            {
+                <RecordPreview Record="s" CssClasses="square3Classes"></RecordPreview>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Shared.Squares.Square Square { get; set; }
+
+    List<Shared.Records.Record> GetRecords4Square(int parentBlock)
+    {
+        return Square?.Records
+            .Where(r => r.ParentBlock == parentBlock)
+            .OrderBy(r => r.Value)
+            .ToList() 
+            ?? new List<Shared.Records.Record>();
+    }
+
+    int GetBlockTotalValue(int parentBlock)
+    {
+        return GetRecords4Square(parentBlock).Sum(r => r.Value);
+    }
+}

@@ -1,0 +1,88 @@
+﻿#extra-wrap-4squares {
+    background-color: yellow;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    min-height: 100%;
+    flex-grow: 1;
+    grid-template-areas:
+        'square0 square1'
+        'square2 square3';
+}
+
+.square-0 {
+    display: flex;
+    background-color: bisque;
+    align-items: flex-end;
+    justify-content: flex-end;
+    grid-area: square0;
+}
+
+
+.square-1 {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    grid-area: square1;
+    background-color: #ffe4c4e8;
+}
+
+.square-2 {
+    display: flex;
+    background-color: #ffe4c4e8;
+    align-items: flex-start;
+    justify-content: flex-end;
+    grid-area: square2;
+}
+
+.square-3 {
+    display: flex;
+    background-color: bisque;
+    align-items: flex-start;
+    justify-content: flex-start;
+    grid-area: square3;
+}
+
+.square {
+    padding: 20px 0;
+    position: relative;
+}
+
+.square-0 extra-data {
+    display: flex;
+    position: relative;
+}
+
+.square-name {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+}
+
+.square-total-value {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+}
+
+.square-2 .square-name,
+.square-2 .square-total-value,
+.square-3 .square-name,
+.square-3 .square-total-value {
+    top: 0;
+}
+
+.square-1 .square-name,
+.square-3 .square-name {
+    right: 20px;
+    left: inherit;
+}
+
+.square-1 .square-total-value,
+.square-3 .square-total-value {
+    right: inherit;
+    left: 5px;
+}

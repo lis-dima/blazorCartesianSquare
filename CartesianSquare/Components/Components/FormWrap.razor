@@ -1,0 +1,14 @@
+﻿<div class="d-flex flex-grow-1" style="background-color: rgb(240 218 218)">
+    @if (ShowCreateSquare)
+    {
+        <div class="d-flex layout-small-part"></div>
+    }
+    else
+    {
+        <CreateRecord></CreateRecord>
+    }
+</div>
+
+@code {
+    public bool ShowCreateSquare { get; set; } = true;
+}

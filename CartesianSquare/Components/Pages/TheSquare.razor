@@ -1,0 +1,65 @@
+﻿@page "/square/{Id:int}"
+@page "/the-square"
+@attribute [Authorize]
+
+@using CartesianSquare.Components.Components
+
+@rendermode InteractiveServer
+
+@implements IDisposable
+
+@inject ISquareService squareService
+
+<PageTitle>@Square.Title</PageTitle>
+
+<SectionContent SectionId="AppLayout.TopbarSection">
+    <RecordForm Square="Square"></RecordForm>
+</SectionContent>
+<FourSquares Square="Square"></FourSquares>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    Square Square { get; set; } = new();
+
+    protected override Task OnInitializedAsync()
+    {
+        squareService.OnNewRecordCreated += handler_OnNewRecordCreated;
+        squareService.OnRecordDeleted += handler_OnRecordDeleted;
+        squareService.OnRecordUpdated += handler_OnRecordUpdated;
+        return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Square = await squareService.GetSquareAsync(Id);
+        }
+    }
+
+    async void handler_OnNewRecordCreated(Record newRecord)
+    {
+        Square = await squareService.GetSquareAsync(Id);
+        StateHasChanged();
+    }
+
+    async void handler_OnRecordDeleted(int recordId)
+    {
+        Square = await squareService.GetSquareAsync(Id);
+        StateHasChanged();
+    }
+
+    async void handler_OnRecordUpdated(Record record)
+    {
+        Square = await squareService.GetSquareAsync(Id);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        squareService.OnNewRecordCreated -= handler_OnNewRecordCreated;
+        squareService.OnRecordDeleted -= handler_OnRecordDeleted;
+        squareService.OnRecordUpdated -= handler_OnRecordUpdated;
+    }
+}
